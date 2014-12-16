@@ -1,0 +1,55 @@
+D/.externalToolBuilders////
+D/.settings////
+/Associating.cpp/1.5/Thu Sep  4 04:09:03 2008//
+/Associating.h/1.5/Tue Oct 14 05:43:56 2008//
+/CTokenizer.h/1.4/Fri Jul  3 07:56:46 2009/-kk/
+/Cacheable.cpp/1.4/Tue Nov 25 05:10:27 2008//
+/Cacheable.h/1.6/Tue Nov 25 05:10:27 2008//
+/Combinatrix.h/1.12/Tue Oct 14 05:43:56 2008//
+/Combinatrix.tem/1.10/Thu Sep  4 04:09:03 2008//
+D/Debug////
+/Displaying.cpp/1.2/Mon May 19 05:25:59 2008//
+/Displaying.h/1.2/Mon May 19 05:25:59 2008//
+/GraphMatchSubstitutor.h/1.10/Tue Oct 14 05:43:56 2008/-kk/
+/GraphMatchSubstitutor.tem/1.13/Fri Sep 26 05:31:10 2008/-kk/
+/LinkGraph.cpp/1.2/Sat Apr  8 09:44:02 2006//
+/LinkGraph.h/1.2/Sat Apr  8 09:44:02 2006//
+/Logging.cpp/1.7/Thu May  1 09:17:49 2008/-kk/
+/Logging.h/1.6/Mon Nov  5 05:01:37 2007/-kk/
+/Observer.h/1.14/Tue Oct 14 05:43:56 2008/-kk/
+/Observer.tem/1.8/Tue Oct 14 05:43:56 2008/-kk/
+/Pairing.cpp/1.1/Tue Oct 17 05:58:29 2006/-kk/
+/Pairing.h/1.1/Tue Oct 17 05:58:29 2006/-kk/
+/ParameterParser.cpp/1.11/Tue Oct 14 05:43:56 2008/-kk/
+/ParameterParser.h/1.10/Tue Oct 14 05:43:56 2008/-kk/
+/PhaseState.cpp/1.6/Fri Sep 26 05:31:10 2008//
+/PhaseState.h/1.2/Fri Sep 26 05:31:10 2008//
+/QualityAcc.cpp/1.3/Fri Nov 23 07:28:59 2007//
+/QualityAcc.h/1.3/Fri Nov 23 07:28:59 2007//
+/RNGHandler.cpp/1.1/Thu Aug  7 09:13:45 2008//
+/RNGHandler.h/1.1/Thu Aug  7 09:13:45 2008//
+/RandomHandler.cpp/1.3/Wed Apr 19 03:55:04 2006/-kk/
+/RandomHandler.h/1.1/Thu Sep 29 07:09:33 2005/-kk/
+D/Release////
+/Singleton.h/1.7/Wed Apr 19 03:55:04 2006/-kk/
+/Stat.h/1.2/Tue Apr 22 01:40:20 2008/-kk/
+/Stat.tem/1.1/Thu May 17 06:55:39 2007/-kk/
+/StatHandler.cpp/1.3/Thu Sep  4 04:09:03 2008/-kk/
+/StatHandler.h/1.4/Tue Oct 14 05:43:56 2008/-kk/
+/StatRecorder.cpp/1.1/Wed Mar 15 03:01:22 2006//
+/StatRecorder.h/1.2/Thu Sep  4 04:09:03 2008//
+/StatRecorder.h.tmp/1.1/Wed Mar 15 03:01:22 2006/-kb/
+/StringUtils.cpp/1.6/Tue Oct 17 05:58:29 2006/-kk/
+/StringUtils.h/1.5/Tue Oct 17 05:58:29 2006/-kk/
+/TableGraph.h/1.6/Thu Sep  4 04:09:03 2008//
+/TableGraph.tem/1.3/Fri Nov 24 06:22:47 2006//
+/TraceNew.cpp/1.1/Thu Sep 29 07:09:33 2005/-kk/
+/TraceNew.h/1.1/Thu Sep 29 07:09:33 2005/-kk/
+/TraceNew.h.tmp/1.1/Wed Mar 15 03:01:22 2006/-kb/
+/functors.h/1.3/Tue Oct 14 05:43:56 2008//
+/logger.cpp/1.16/Mon Jul 27 04:01:14 2009//
+/logger.h/1.14/Mon Nov 10 08:44:25 2008//
+/macros.cpp/1.1/Tue Nov 25 05:10:27 2008//
+/macros.h/1.30/Tue Nov 25 05:10:27 2008/-kk/
+/macros.tem/1.1/Tue Nov 25 05:10:27 2008//
+/makefile/1.12/Tue Nov 25 05:10:27 2008//

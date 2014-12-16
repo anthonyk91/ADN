@@ -1,0 +1,137 @@
+
+#include "Observer.h"
+
+namespace utils {
+	
+template <class O, class S>
+Observer<O,S>::Observer() { _subjects.clear(); }
+
+template <class O, class S>
+Observer<O,S>::Observer(const Observer& o) { _subjects.clear(); }
+
+template <class O, class S>
+Observer<O,S>& Observer<O,S>::operator=(const Observer& o) { 
+	_subjects.clear(); 
+	return *this;
+}
+
+template <class O, class S>
+Observer<O,S>::~Observer() {
+    // unlink all subjects
+    typename list<Subject<S,O> * >::iterator iter;
+    for (iter=_subjects.begin(); iter != _subjects.end(); iter++)
+    {
+        (*iter)->unlinkObserver(*this);
+    }
+}
+        
+template <class O, class S>
+void Observer<O,S>::watch(Subject<S,O>& subj)
+{
+    _subjects.push_back(&subj);
+    subj.linkWith(*this);
+}
+
+template <class O, class S>
+bool Observer<O,S>::ceaseWatching(Subject<S,O>& subj)
+{
+    bool result = subj.unlinkObserver(*this);
+    result &= unlinkSubject(subj);
+    return result;
+}
+        
+template <class O, class S>
+void Observer<O,S>::notification(const Subject<S,O>* notifier) {} // called when a subject sends a notify signal (implemented by subclass)
+
+template <class O, class S>
+const list<Subject<S,O>*>& Observer<O,S>::getSubjects() const // returns list of subjects still active
+	{ return _subjects; }
+
+template <class O, class S>
+bool Observer<O,S>::unlinkSubject(Subject<S,O>& subj)
+{
+     // remove first instance of this subject
+    typename list<Subject<S,O>*>::iterator iter;
+    for (iter=_subjects.begin(); iter != _subjects.end(); iter++)
+    {
+        if (*iter == &subj) {
+            _subjects.erase(iter);
+            return true;
+        }
+    }
+    return false;
+    //warn("error unlinking subject, not found in observer's subject list");   
+}
+
+template <class O, class S>
+int Observer<O, S>::subjectCount() const { return _subjects.size(); }
+
+
+
+
+template <class S, class O>
+Subject<S,O>::Subject() { _observers.clear(); }
+
+template <class S, class O>
+Subject<S,O>::Subject(const Subject& s) { _observers.clear(); }
+
+template <class S, class O>
+Subject<S,O>& Subject<S,O>::operator=(const Subject& s) { 
+	_observers.clear(); 
+	return *this;
+}
+
+template <class S, class O>
+Subject<S,O>::~Subject()
+{
+     // unlink all observers
+    typename list<Observer<O,S>*>::iterator iter;
+    for (iter=_observers.begin(); iter != _observers.end(); iter++)
+    {
+        (*iter)->unlinkSubject(*this);
+    }
+   
+}
+        
+template <class S, class O>
+void Subject<S,O>::notify() const
+{
+    typename list<Observer<O,S>*>::iterator iter;
+    for (iter=_observers.begin(); iter != _observers.end(); iter++)
+        (*iter)->notification(this);   
+}
+
+template <class S, class O>
+bool Subject<S,O>::unlinkObserver(Observer<O,S>& obs)
+{
+    // remove first instance of this observer
+    typename list<Observer<O,S>*>::iterator iter;
+    for (iter=_observers.begin(); iter != _observers.end(); iter++)
+    {
+        if (*iter == &obs) {
+            _observers.erase(iter);
+            return true;
+        }
+    }
+    return false;
+    //warn("error unlinking observer, not found in subject's observer list");
+}
+
+template <class S, class O>
+void Subject<S,O>::linkWith(Observer<O,S>& obs)
+{
+    _observers.push_back(&obs);
+}
+
+template <class S, class O>
+const list<Observer<O,S>*>& Subject<S,O>::getObservers() const  // returns list of subjects still active
+	{ return _observers; }
+
+template <class S, class O>
+int Subject<S,O>::observerCount() const { return _observers.size(); }
+
+
+
+
+} // namespace utils
+

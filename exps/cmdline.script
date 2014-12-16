@@ -1,0 +1,83 @@
+resultPath = .
+runName = csv
+
+numThreads = 2
+batchSize = 10
+removalIterations = 100
+predictionClasses = 1
+
+sparseOutLimit = 0
+sparseCreateProb = 0.01
+outputMinDepth = 0
+
+epochsPerEval = 0
+epochsPerWrite = 0
+maxEpochs = 100
+showGameInterval = 1000 # games
+
+harnessType = pt
+worldType = rng
+
+insertEqCheck = 3
+activationSet = 5 # allComps = 1, activeComps = 2, topComps = 3, 
+	# allCompsAtoms = 4, activeCompsAtoms = 5
+backpropMethod = 0 # 1 = comp network, 2 = position, 4 = atom adj
+propagationMethod = 1 # 1 = active, 2 = all
+
+#trainTime = 4200
+scheduleRate = 4 # per time
+scheduleFixedSteps = 90
+learningDecay = 0.95
+learnInit = 0.01
+momInit = 1.0
+momFinal = 1.0
+fastEpochs = 10
+updateSteps = 5000
+
+normaliseData = 0
+normaliseError = 0
+
+probPostCreate = 0.4
+gradCreateMethod = 2 # 1 = thresh, 2 = rnd
+
+maxComposites = 1500
+maxAtomFragments = 1500
+createEachInstProb = 0.0
+atomRatio = 0.1
+maxChildren = 2
+atomSymbols = 1
+normaliseClasses = 1
+sampleMethod = 3 # 1 random, 2 bias to weaker, 3 incremental
+
+activationBuffer = 0.1
+
+logicMethod = 1 # 1 = and, 2 = multiple
+weightMethod = 1 # 1 = even, 2 = acc, 3 = assoc, 4 = preffreq for 
+	# selection in creating comps, 5 = assocSum
+weightBias = 5.0  # wt = exp(bias * wt)
+minWeight = 0.0001
+createMethod = 1 # 1 = single, 2 = many
+fragPopMethod = 4 # 1 = acc, 2 = maxAssoc, 3 = prefFreq, 4 = assocSum
+outActivationMethod = 4 # 1 = best, 2 = sum, 3 = avg, 4 = softmax
+learningRate = 0.01
+reproductionBeta = 2.0
+
+neurMethod = 1 # 1 = th, 2 = relu, 3 = logistic (?)
+convStride = 1
+imMatchThreshold = 0.5 # lower bound on positive matches
+imRuleMatchThreshold = 0.5
+weightDecay = 1.0
+momentum = 1.0
+#dropoutFragments = 0
+
+# set which channels to output date/time information to
+datestamp = 1 2
+
+fragInfoChannel = 9
+
+testOutputChannel = 10
+
+showGameInterval = 1000
+dumpFragsInterval = 0
+
+avResAlpha = 0.001

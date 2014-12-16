@@ -1,0 +1,24 @@
+todolist.txt
+ Created on: 26/05/2014
+     Author: anthony
+
+     * move tournament into driver file or similar
+     * move hyper parameters from harness into Params, 
+        eg controlling learning
+     * move instance related items from harness to instharness
+     * handle stuff with gamemoves (mostly removed)
+     * connect binary to new structure & tidy up
+     * catching thrown exceptions so doesn't just segfault (done, only crashes in condor)
+     
+     * not showing output before dump when param not found
+     * change tokenising to use boost
+     * output to streams one line at a time with formatting (eg date).  identify hanging lines
+     * automatically choose sigm when binary classes
+     * change all Fragment to Fragment, Associating to Classification (sim)
+     * remove unused Utils
+     * connect imgrid to new structure & tidy up
+     * replace stringutils with boost
+     * change use of term class with nominal when reading features
+     
+     * fix comp equality test (bincomp?), won't work properly for multiple elements
+     * display of bincomp seems to be wrong, doesn't match child elements

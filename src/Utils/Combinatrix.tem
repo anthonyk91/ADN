@@ -1,0 +1,523 @@
+template <typename T>
+Combinatrix<T>::Combinatrix(unsigned int numCombinations)
+	: _combTable(numCombinations)
+{
+}
+
+template <typename T>
+Combinatrix<T>::~Combinatrix()
+{
+    // delete all local vectors allocated on heap
+    //typename table_type::iterator iter;
+    //_foreach(_combTable, iter) delete *iter;
+}
+
+
+template <typename T>
+void Combinatrix<T>::setCombination(const sequence_type& comb, unsigned int index)
+{
+    //vector<T>* newVect = new vector<T>(comb);
+    //cout << "creating sequence with address:" << newVect << "\n";
+    
+	// assume index is within range
+	_combTable[index] = comb; // will create copy of vector
+
+    invalidateIterators();
+}
+
+/*template <typename T>
+void Combinatrix<T>::addCombination(const sequence_type& comb) 
+{
+    //vector<T>* newVect = new vector<T>(comb);
+    //cout << "creating sequence with address:" << newVect << "\n";
+    _combTable.push_back(comb); // will create copy of vector
+
+    invalidateIterators();
+}*/
+
+
+template <typename T>
+CombSelIterator<T> Combinatrix<T>::sel_begin() const
+{
+    // return iterator set to new sequence
+    return CombSelIterator<T>(this);
+}
+
+template <typename T>
+CombSelIterator<T> Combinatrix<T>::sel_end() const
+{
+    return CombSelIterator<T>(this, true);
+}
+
+template <typename T>
+CombExSelIterator<T> Combinatrix<T>::exsel_begin() const
+{
+    // return iterator set to new sequence
+    return CombExSelIterator<T>(this);
+}
+
+template <typename T>
+CombExSelIterator<T> Combinatrix<T>::exsel_end() const
+{
+    return CombExSelIterator<T>(this, true);
+}
+
+template <typename T>
+void Combinatrix<T>::invalidateIterators()
+{
+    // invalidate any existing sequence iterators (note will invalidate any "end" iterators as well)
+    Subject<Combinatrix<T>, CombSeqIterator<T> >::notify();
+
+    // invalidate any existing selection iterators
+    Subject<Combinatrix<T>, CombSelIterator<T> >::notify();    
+}
+
+template <typename T>
+CombSortIterator<T> Combinatrix<T>::sort_begin(bool initToFirstSequence)
+{
+    invalidateIterators();
+    
+    // return iterator set to new sequence
+    return CombSortIterator<T>(this, initToFirstSequence);
+}
+
+template <typename T>
+CombSortIterator<T> Combinatrix<T>::sort_end()
+{
+    return CombSortIterator<T>(this, false, true);
+}
+
+template <typename T>
+CombRandIterator<T> Combinatrix<T>::rand_begin(int ttl)
+{
+    invalidateIterators();
+    
+    // return iterator set to new sequence
+    return CombRandIterator<T>(this, ttl, false);
+}
+
+template <typename T>
+CombRandIterator<T> Combinatrix<T>::rand_end()
+{
+    return CombRandIterator<T>(this, 0, true);
+}
+
+template <typename T>
+typename Combinatrix<T>::table_type::const_iterator Combinatrix<T>::table_begin() const
+{
+    return _combTable.begin();   
+}
+
+template <typename T>
+typename Combinatrix<T>::table_type::const_iterator Combinatrix<T>::table_end() const
+{
+    return _combTable.end();   
+}
+
+template <typename T>
+string Combinatrix<T>::display()
+{
+    // display combinatrix table
+    using namespace std;
+    ostringstream oss;
+    
+    typename table_type::iterator iter;
+    _foreach(_combTable, iter) {
+        oss << ":";
+        typename table_type::value_type::iterator int_iter;
+        _foreach((*iter), int_iter) {
+            oss << (*int_iter); // assume can be added to stream.. hmm..
+        }
+    }
+    
+    return oss.str();
+}
+
+template <typename T>
+void Combinatrix<T>::setTable(const table_type& inTable) {
+    _combTable = inTable;
+}
+
+template <typename T>
+long Combinatrix<T>::totalSequences() { // number of sequences that will be generated from data set
+    long totseq = 1;
+    
+    typename table_type::iterator iter;
+    _foreach(_combTable, iter) {
+        totseq *= factorial((*iter).size());
+    }
+    
+    return totseq;
+}
+
+template <typename T>
+long Combinatrix<T>::totalSelections() { // number of selection combinations from data set
+    long totsel = 1;
+    
+    typename table_type::iterator iter;
+    _foreach(_combTable, iter) {
+        totsel *= (*iter).size();
+    }
+    
+    return totsel;
+}
+
+template <typename T>
+bool Combinatrix<T>::empty() const {
+    return _combTable.empty();
+}
+
+template <typename T>
+void Combinatrix<T>::clear() {
+    _combTable.clear();
+    invalidateIterators();
+}
+
+/* CombSelIterator methods: iterator for combinatrix object */
+
+template <typename T>
+CombSelIterator<T>::CombSelIterator(const Combinatrix<T>* parent, bool end) 
+    : _valid(true), _end(end), _parent(parent)
+{
+    // initialise iterator on this parent
+    const typename Combinatrix<T>::table_type& table = _parent->_combTable;
+    
+    _numRows = table.size();
+    _positions.resize(_numRows);
+    _entrySizes.resize(_numRows);
+    _returnVector.resize(_numRows);
+    for (unsigned int i=0; i<_numRows; ++i) {
+        _positions[i] = 0;         
+        _entrySizes[i] = (table[i].size());
+    }
+}
+
+template <typename T>
+CombSelIterator<T>::~CombSelIterator<T>() {}
+
+template <typename T>
+const CombSelIterator<T>& CombSelIterator<T>::operator++()
+{
+    _Assert(_valid, ("Attempt to increment invalid iterator\n"));
+
+    increment();
+     
+    return *this;
+}
+
+template <typename T>
+bool CombSelIterator<T>::increment(unsigned int incrIndex)
+{
+    _Assert(_valid, ("Attempt to increment invalid iterator\n"));
+
+    // set all positions before incr index to start (zero)
+    unsigned int idx;
+    for (idx = 0; idx < incrIndex; idx++) {
+        _Assert(idx < _numRows, ("Invalid table position\n"));
+        _positions[idx] = 0;
+    }
+    
+    // increment this position and all subsequent if carrying over
+    bool completed = true; // assume completed unless early exit from loop
+    for (idx = incrIndex; idx < _numRows; idx++) {
+        int& thisPos = _positions[idx];
+        ++thisPos;
+        if (thisPos == _entrySizes[idx]) {
+            // at end of list, set to beginning and continue 
+            // incrementing next
+            thisPos = 0;
+        } else {
+            completed = false;
+            break;
+        }
+    }
+
+    if (completed) {
+        _end = true;
+        return false;
+    }
+    
+    return true;
+}
+
+template <typename T>
+bool CombSelIterator<T>::operator!=(const CombSelIterator<T>& it) const
+{
+    // check if two iterators are different.  only really needed for testing end,
+    // CombSelIterator is not designed for random access and comparing two iterators
+    _Assert(_valid && it._valid, ("Attempt to compare invalid iterator\n"));
+    
+    _Assert(_parent == it._parent, ("Attempt to compare iterators of different objects\n"));
+    _Assert(_numRows == it._numRows, ("Invalid comparison\n"));
+    
+    if (_end || it._end) {
+        if (_end == it._end) return false;
+        return true; // one is end, other is not
+    }
+    
+    // both not end, check if same position
+    for (unsigned int idx = 0; idx < _numRows; idx++) if (_positions[idx] != it._positions[idx]) return true;
+        
+    return false;  // all elements the same        
+}
+ 
+template <typename T>
+vector<T>& CombSelIterator<T>::operator*()
+{
+    _Assert(_valid && (! _end), ("Attempt to dereference invalid iterator\n"));
+    
+    // construct vector which contains one element from each combination section
+    for (unsigned int idx=0; idx < _numRows; idx++) {
+        // grab appropriate element from big table according to set positions
+        int thisTablePosition = _positions[idx];
+        
+        _Assert(thisTablePosition < _entrySizes[idx], ("Invalid table position: %d, size is %d\n", thisTablePosition, _entrySizes[idx]));  
+
+        _returnVector[idx] = (_parent->_combTable[idx])[thisTablePosition];
+//        returnVec.push_back((_parent->_combTable[idx])[_tablePositions[idx].first]);
+    }
+    
+    return _returnVector;
+}
+    
+
+template <typename T>
+void CombSelIterator<T>::notification() { _valid = false; }
+
+template <typename T>
+bool CombSelIterator<T>::isValid() const { return _valid; }
+
+/* Exclusive Selection Iterator */
+
+template <typename T>
+CombExSelIterator<T>::CombExSelIterator(const Combinatrix<T>* parent, bool end)
+    : CombSelIterator<T>(parent, end) 
+{
+	if (end) return;
+	
+    // create copy of data store using number references for elements
+    const typename Combinatrix<T>::table_type& table = parent->_combTable;
+    typename Combinatrix<T>::table_type::const_iterator iter;
+    typename Combinatrix<T>::sequence_type::const_iterator rowIter;
+    _numElems = 0;
+    CombSelIterator<T>::_numRows = 0;
+    _foreach(table, iter) {
+        vector<int> rowElements;
+        
+        // look at each element, add to number list and make copy of table
+        _foreach((*iter), rowIter) {
+            const T& thisElem = *rowIter;   
+            typename tr1::unordered_map<T,int>::iterator mapElem = _elemMap.find(thisElem);
+            int thisElNumber;
+            if (mapElem == _elemMap.end()) {
+                // new element, add to map
+                thisElNumber = _elemMap[thisElem] = _numElems;
+                _numElems++;
+            } else thisElNumber = (*mapElem).second;
+            
+            rowElements.push_back(thisElNumber);
+        }
+        
+        _elemArray.push_back(rowElements);
+        CombSelIterator<T>::_numRows++;
+    }
+    _matchList.resize(_numElems);
+    
+    // initially is set to 0 position for each entry, check valid, increment
+    // to next valid position
+    int invalidPosition;
+    while ((invalidPosition = findInvalidPosition()) != VALID_POSITION) {
+        if (! CombSelIterator<T>::increment(invalidPosition)) break;
+    }
+}
+
+template <typename T>
+CombExSelIterator<T>::CombExSelIterator() {}
+
+template <typename T>
+CombExSelIterator<T>::~CombExSelIterator() {}
+
+template <typename T>
+const CombSelIterator<T>& CombExSelIterator<T>::operator++()
+{
+    _Assert(CombSelIterator<T>::_valid, ("Attempt to increment invalid iterator\n"));
+
+    int invalidPosition = findInvalidPosition();
+    do {
+        int incrPosition = invalidPosition;
+        if (incrPosition == VALID_POSITION) incrPosition = 0;
+        
+        if (! CombSelIterator<T>::increment(incrPosition)) break;
+    } while ((invalidPosition = findInvalidPosition()) != VALID_POSITION); 
+
+    return *this;
+}
+
+template <typename T>
+int CombExSelIterator<T>::findInvalidPosition()
+{
+    for (int i=0; i<_numElems; i++) _matchList[i] = false;
+    
+    for (int idx=CombSelIterator<T>::_numRows-1; idx >= 0; idx--) {
+        // find element at this position, and set as used
+        int thisElem = _elemArray[idx][CombSelIterator<T>::_positions[idx]];
+        
+        if (_matchList[thisElem]) return idx;
+        else _matchList[thisElem] = true;
+    }
+
+    return VALID_POSITION;
+}
+
+template <typename T>
+int CombExSelIterator<T>::findInvalidPosition_prev()
+{
+    //tr1::unordered_map<T, bool> elementsUsed;   
+    set<T> examinedSet;
+
+    int maxIdx = CombSelIterator<T>::_tablePositions.size();
+    for (int idx=maxIdx-1; idx >= 0; idx--) {
+        // find element at this position, and set as used
+        const T& thisElem = (CombSelIterator<T>::_parent->_combTable[idx])[CombSelIterator<T>::_tablePositions[idx].first];
+        
+        // add to set of examined elements.  if insert fails (already examined), exit here
+        if (! examinedSet.insert(thisElem).second) {
+            // object is already set as used, fail at this point
+            return idx;
+        }
+        /*if (elementsUsed.find(thisElem) != elementsUsed.end() && elementsUsed[thisElem]) {
+            // object is already set as used, fail at this point
+            return idx;   
+        }
+        elementsUsed[thisElem] = true;*/
+    }
+
+    return VALID_POSITION;
+}
+
+/** Sequence Iterator methods **/
+
+template <typename T>
+CombSeqIterator<T>::~CombSeqIterator<T>() {}
+
+template <typename T>
+const typename Combinatrix<T>::table_type& CombSeqIterator<T>::operator*()
+{
+    _Assert(_valid && (! _end), ("Attempt to dereference invalid or end iterator\n"));
+
+    // return current sequence
+    return _parent->_combTable;
+}
+
+template <typename T>
+bool CombSeqIterator<T>::operator!=(const CombSeqIterator<T>& it) const
+{
+    // check if two iterators are different.  only really needed for testing end,
+    // CombSeqIterator cannot be used to compare two iterators on same parent, creating second invalidates previous
+    // currently not checking if same type, but meaningless if called that way
+    _Assert(_valid && it._valid, ("Attempt to compare invalid iterator\n"));
+    
+    _Assert(_parent == it._parent, ("Attempt to compare iterators of different objects\n"));
+    
+    if (_end || it._end) {
+        if (_end == it._end) return false;
+        return true; // one is end, other is not
+    }
+
+    return false;  // don't know how it could end up here
+}
+
+template <typename T>
+void CombSeqIterator<T>::notification() { _valid = false; }
+
+template <typename T>
+bool CombSeqIterator<T>::isValid() { return _valid; }
+
+template <typename T>
+bool CombSeqIterator<T>::isEnd() { return _end; }
+
+template <typename T>
+void CombSeqIterator<T>::setEnd(bool end) { _end = end; }
+
+
+
+/** sort iterator methods **/
+template <typename T>
+CombSortIterator<T>::CombSortIterator(Combinatrix<T>* parent, bool initToFirstSequence, bool end) 
+    : CombSeqIterator<T>(parent, end)
+{
+
+    if (! end && initToFirstSequence) {
+        // initialise each list in parent to beginning of sort sequence
+        typename Combinatrix<T>::table_type::iterator iter;
+        _foreach(parent->_combTable, iter) {
+            typename Combinatrix<T>::sequence_type& thisSequence = *iter;
+            sort(thisSequence.begin(), thisSequence.end());
+        }
+    }
+}
+
+template <typename T>
+const CombSortIterator<T>& CombSortIterator<T>::operator++()
+{
+    _Assert(CombSeqIterator<T>::_valid && (! CombSeqIterator<T>::_end), ("Attempt to increment invalid or end iterator\n"));
+
+    // make next sequence
+    typename Combinatrix<T>::table_type::iterator iter;
+    bool madePermutation = false;
+    _foreach(CombSeqIterator<T>::_parent->_combTable, iter) {
+        // move this sequence into the next position
+        typename Combinatrix<T>::sequence_type& thisSequence = *iter;
+        
+        madePermutation = next_permutation(thisSequence.begin(), thisSequence.end());
+        
+        if (madePermutation) break; // successfully moved to next sequence
+        // otherwise will change this permutation to first (sorted) permutation
+        // and move to the next sequence, increasing that one
+    }
+    
+    if (! madePermutation) {
+        // nothing was bumped forwards, so have reached end of sequence
+        CombSeqIterator<T>::_end = true;
+    }
+    
+    return *this;
+}
+
+/** random (sort) iterator methods **/
+template <typename T>
+CombRandIterator<T>::CombRandIterator(Combinatrix<T>* parent, int ttl, bool end) 
+    :  CombSeqIterator<T>(parent, end), _ttl(ttl)
+{
+    if (! end) {
+        // make next sequence.  just shuffle each entry
+        typename Combinatrix<T>::table_type::iterator iter;
+        _foreach(parent->_combTable, iter) {
+            // move this sequence into the next position
+            typename Combinatrix<T>::sequence_type& thisSequence = *iter;
+            
+            random_shuffle(thisSequence.begin(), thisSequence.end());
+        }
+    }
+}
+
+template <typename T>
+const CombRandIterator<T>& CombRandIterator<T>::operator++()
+{
+    _Assert(CombSeqIterator<T>::_valid && (! CombSeqIterator<T>::_end), ("Attempt to increment invalid or end iterator\n"));
+
+    if (--_ttl == 0) {
+        // count has reached end
+        CombSeqIterator<T>::_end = true;
+    } else {   
+        // make next sequence.  just shuffle each entry
+        typename Combinatrix<T>::table_type::iterator iter;
+        _foreach(CombSeqIterator<T>::_parent->_combTable, iter) {
+            // move this sequence into the next position
+            typename Combinatrix<T>::sequence_type& thisSequence = *iter;
+            
+            random_shuffle(thisSequence.begin(), thisSequence.end());
+        }
+    }    
+    return *this;
+}

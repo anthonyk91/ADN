@@ -1,0 +1,175 @@
+
+namespace utils {
+
+// template implementations
+template <class InputIterator>
+int countElements(InputIterator first, InputIterator last)
+{
+    InputIterator iter;
+    int nElements = 0;
+    for (iter = first; iter != last; iter++) nElements++;
+
+    return nElements;
+}
+
+// returns heap allocated container containing difference of
+template <class Container>
+bool isSubset(const Container& a, const Container& b, Container* setDiff = NULL)
+{
+    Container a_copy = a;
+    Container b_copy = b;
+    sort(a_copy.begin(), a_copy.end());
+    sort(b_copy.begin(), b_copy.end());
+    
+    typename Container::const_iterator a_iter;
+    typename Container::const_iterator b_iter;
+
+    bool takeSetDiff = (setDiff != NULL);
+    
+    b_iter = b_copy.begin();
+    _foreach(a_copy, a_iter) {
+        if (b_iter == b_copy.end()) return false; // this a node unsatisfied
+        while(*a_iter != *b_iter) {
+            // symbols don't match, therefore b is unpaired item
+            if (takeSetDiff) setDiff->push_back(*b_iter);
+                        
+            ++b_iter;
+            if (b_iter == b_copy.end()) return false;
+        }
+        // match found for this element in a
+        ++b_iter;
+    }
+    
+    // put the rest of the b container in the unmatched set
+    if (takeSetDiff) {
+        while(b_iter != b_copy.end()) {
+            setDiff->push_back(*b_iter);
+            ++b_iter;   
+        }
+    }
+    
+    return true;
+}
+
+
+/* returns an iterator to an element between first and last (last not included).
+   pre: first, last valid iterators, last reachable (by comparison) from first
+*/
+template<class someclass> 
+bool ptrue<someclass>::operator()(someclass c) const { return true; }
+
+template <class InputIterator>
+InputIterator selectRandom(InputIterator first, InputIterator last)
+	{ return selectRandom(first, last, ptrue<typename InputIterator::value_type>()); }
+
+template <class InputIterator, class Predicate>
+InputIterator selectRandom(InputIterator first, InputIterator last,
+	Predicate test)
+{
+    InputIterator iter, chosen;
+    chosen = last;
+    
+    float pSelect;
+    
+    if (first == last) return last; // no elements to choose from
+    int thisElement = 1;
+
+    for (iter = first; iter != last; iter++)
+    {
+    	if (! test(*iter)) continue;
+        pSelect = 1 / (float) thisElement;
+        if (_pRand(pSelect)) {
+            chosen = iter;
+        }
+        
+        thisElement++;
+    }
+    
+    return chosen;
+	
+}
+
+template <class Collection1, class Collection2>
+Collection1& joinVec(Collection1& receiver, const Collection2& adder)
+{
+    receiver.insert(receiver.end(), adder.begin(), adder.end());
+    return receiver;
+}
+
+template <class Collection>
+Collection& eraseRandom(Collection& collect)
+{
+    //_Assert(! collect.empty(), ("Attempt to erase item from empty collection\n"));
+    if (collect.empty()) return collect; // nothing to erase
+    collect.erase(selectRandom(collect.begin(), collect.end()));
+    return collect;
+}
+
+template <class numeric>
+numeric factorial(numeric n)
+{
+    if (n == 0) return 1;
+    numeric total = n;
+    for (numeric i = n-1; i>1; i--) total *= i;
+    
+    return total;
+}
+
+// biased towards inserting at end of list, best for sequences of decreasing value
+template <class Collection, class Element, class Comparison, class Iterator>
+void insertSorted(Collection& col, Element& el, Comparison lessThan) {
+    // assumes collection is already sorted, with first < last  
+    if (! lessThan(el, col.back())) {
+        col.push_back(el);
+        return;
+    }
+
+    // traverse col from front
+    Iterator iter;
+    _foreach(col, iter) {
+        if (lessThan(el, *iter)) {
+               col.insert(el, iter);
+        }        
+    }
+}
+
+template <typename T>
+void limitRange(std::pair<T,T>& rngA, const std::pair<T,T>& rngB)
+{
+	// assume first is min of each and second is max
+	
+	// if non-overlap, take largest region
+	if (rngA.second < rngB.first || rngB.second < rngA.first) {
+		rngA.first = _min(rngA.first, rngB.first);
+		rngA.second = _max(rngA.second, rngB.second);
+	} else {
+		// take overlap region
+		rngA.first = _max(rngA.first, rngB.first);
+		rngA.second = _min(rngA.second, rngB.second);
+	}
+}
+
+template <typename T>
+void findOverlapRange(T valA, T valB, T pAgivenB, T pBgivenA, 
+			std::pair<T,T>& rng)
+{
+	// find prob range of AB according to B
+	T pNotBgivenA = 1 - pBgivenA;
+	rng.first = valA / pBgivenA;
+	rng.second = rng.first - pNotBgivenA / pBgivenA;
+
+	std::pair<T,T> rngB;
+	T pNotAgivenB = 1 - pAgivenB;
+	rngB.first = valB / pAgivenB;
+	rngB.second = rngB.first - pNotAgivenB / pAgivenB;
+		
+	std::pair<T,T> normRng(0.0,1.0);
+	limitRange(rng, normRng);
+	limitRange(rngB, normRng);
+	
+	// find overlap of ranges
+	limitRange(rng, rngB);
+}
+
+
+} //  namespace utils

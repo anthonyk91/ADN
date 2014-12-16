@@ -1,0 +1,13 @@
+#CC := /usr/bin/g++ -march=core2 -m32
+#LD := /usr/bin/g++ -static
+CC := /usr/bin/g++ -march=native
+LD := /usr/bin/g++
+ROOT_LIBS := /usr/lib64/
+BASE_INCLUDE := /usr/local/include
+CONDOR_LIBS := /usr/lib/gcc/i486-linux-gnu/4.7
+
+#CC := /usr/local/bin/g++
+#LD := /usr/local/bin/g++
+#ROOT_LIBS := /usr/local/lib/
+#CC := g++
+#LD := g++

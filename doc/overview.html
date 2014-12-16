@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title></title>
+	<meta name="generator" content="LibreOffice 4.2.5.2 (Linux)">
+	<meta name="created" content="20141111;0">
+	<meta name="changed" content="20141130;160124305808653">
+	<style type="text/css">
+	<!--
+		@page { margin: 2.01cm }
+		p { margin-bottom: 0.25cm; color: #000000; line-height: 120% }
+		h2 { color: #000000 }
+		h2.western { font-family: "Albany", sans-serif; font-size: 16pt }
+		h2.cjk { font-family: "DejaVu Sans"; font-size: 16pt }
+		h2.ctl { font-family: "DejaVu Sans"; font-size: 16pt }
+		a:link { so-language: en-US }
+	-->
+	</style>
+</head>
+<body lang="en-AU" text="#000000" dir="ltr" style="background: transparent">
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<h2 class="western">Abstract Deep Network</h2>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">This package
+includes an implementation of the ADN algorithms, and routines for
+running experiments based on script files.</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">The software is
+written as a template method, where the ADN library is based around a
+process of making an observation, performing an action, and making
+updates as necessary. It is written as an OO implementation, with the
+intention of allowing parts to be modified in a flexible manner. This
+can be done by subclassing, where parts can be extended or replaced
+to change the design.</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><i>Dependencies:</i></p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">gsl, boost</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><i>Installing.</i></p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">The file
+/makefile-defs contains some basic definitions (CC, include paths
+etc) that need to be adjusted.</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">The following is an
+example of how to get the learner compiled and running.</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">* edit 
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><i>Overview</i></p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">For a description of
+the algorithm see (preprint link).</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">The ADN library
+(/ADN) contains definitions for fragments (atomic and composite), and
+a harness for managing the lifecycle of fragments. The harness has
+routines for making an observation of the world, passing activations
+through the feature network, and making adjustments after receiving
+feedback.</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">The Point folder
+(/Point) extends the classes defined in the ADN library, and provides
+a working implementation. This operates on environments (datasets)
+with a set of real, int or nominal values per instance, typical of
+UCI/ARFF formats.</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%">(The convolutional
+implementation, which operates on 2D inputs such as images, is not
+included as it doesn't fit together after I reworked the other
+parts.)</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><i>Developing using
+ADN</i></p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; font-variant: normal; font-style: normal; line-height: 100%">
+The library is implemented as an object-oriented design, which should
+be flexible to extend and modify. Following is an example of how a
+new module can be created to extend and alter the operation of the
+base classes, to experiment with different algorithms.</p>
+<p style="margin-bottom: 0cm; line-height: 100%"><br>
+</p>
+<p style="margin-bottom: 0cm; font-variant: normal; font-style: normal; line-height: 100%">
+(add description)</p>
+</body>
+</html>

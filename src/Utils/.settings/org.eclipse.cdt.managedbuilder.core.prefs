@@ -1,0 +1,7 @@
+#Fri Mar 17 15:57:30 EST 2006
+eclipse.preferences.version=1
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.cygwin.lib.debug.1828183858=<?xml version\="1.0" encoding\="UTF-8"?>\n<environment>\n<variable name\="CPATH" operation\="remove"/>\n<variable name\="CPLUS_INCLUDE_PATH" value\="" operation\="remove"/>\n</environment>\n
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.cygwin.lib.release.301191065=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<environment>\r\n<variable delimiter\=";" name\="CPATH" operation\="replace" value\="c\:\\boost\\include\\boost-1_32;c\:\\local\\include;c\:\\Boost\\include\\boost-1_32;c\:\\local\\ParamContainer;\:;/c/Boost/include/boost-1_32\:/c/local/ParamContainer"/>\r\n<variable delimiter\="\:" name\="CPLUS_INCLUDE_PATH" operation\="append" value\="/c/Boost/include/boost-1_32\:/c/local/src/ParamContainer"/>\r\n</environment>\r\n
+environment/project=<?xml version\="1.0" encoding\="UTF-8"?>\n<environment/>\n
+environment/project/cdt.managedbuild.config.gnu.cygwin.lib.debug.1828183858=<?xml version\="1.0" encoding\="UTF-8"?>\n<environment/>\n
+environment/project/cdt.managedbuild.config.gnu.cygwin.lib.release.301191065=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<environment/>\r\n
